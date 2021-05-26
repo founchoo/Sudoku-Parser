@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#include <time.h>
 
 int problem_map_001[9][9] =
 {
@@ -221,6 +222,7 @@ void fill_user_map(int map[9][9])
 
 int main()
 {
+	time_t start_time = time(NULL);
 	int length = 9;
 	/*printf("Please input the problem map:");
 	for (int i = 0; i < length; i++)
@@ -293,6 +295,8 @@ int main()
 			problem_user_map[map[i].row_index][map[i].column_index] = map[i].selectable_nums[map[i].selectable_nums_index];
 		}
 	}
+	time_t end_time = time(NULL);
 	printf("循环次数：%d\n", c);
+	printf("总运行时间：%lld\n", end_time - start_time);
 	print_map(problem_user_map, length);
 }
