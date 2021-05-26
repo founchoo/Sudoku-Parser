@@ -2,7 +2,7 @@
 #include <math.h>
 #include <stdbool.h>
 
-int problem_hard_map[9][9] =
+int problem_map_001[9][9] =
 {
 	{3, 0, 0, 0, 6, 0, 0, 2, 5},
 	{8, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -15,20 +15,20 @@ int problem_hard_map[9][9] =
 	{4, 1, 0, 0, 7, 0, 0, 0, 6}
 };
 
-int problem_user_map[9][9] =
+int problem_map_002[9][9] =
 {
-	{0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	{0, 0, 2, 7, 0, 8, 6, 0, 0},
+	{0, 3, 0, 0, 0, 0, 0, 1, 0},
+	{0, 0, 0, 5, 0, 6, 0, 0, 0},
+	{5, 0, 7, 0, 0, 0, 1, 0, 4},
+	{0, 0, 0, 0, 4, 0, 0, 0, 0},
+	{3, 0, 4, 0, 0, 0, 7, 0, 8},
+	{0, 0, 0, 2, 0, 1, 0, 0, 0},
+	{0, 2, 0, 0, 0, 0, 0, 6, 0},
+	{0, 0, 8, 4, 0, 9, 5, 0, 0}
 };
 
-int problem_temp_map[9][9] =
+int problem_user_map[9][9] =
 {
 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -208,6 +208,17 @@ Struct1 get_selectable_nums_and_size(int map[9][9], int row_index, int column_in
 	return str;
 }
 
+void fill_user_map(int map[9][9])
+{
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			problem_user_map[i][j] = map[i][j];
+		}
+	}
+}
+
 int main()
 {
 	int length = 9;
@@ -219,15 +230,7 @@ int main()
 			scanf("%d", problem_user_map[i][j]);
 		}
 	}*/
-	//used for test
-	for (int i = 0; i < 9; i++)
-	{
-		for (int j = 0; j < 9; j++)
-		{
-			problem_user_map[i][j] = problem_hard_map[i][j];
-		}
-	}
-	//
+	fill_user_map(problem_map_002);
 	int counts = 0;
 	for (int i = 0; i < length; i++)
 	{
