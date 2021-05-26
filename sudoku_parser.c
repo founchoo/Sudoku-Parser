@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <stdbool.h>
-#include <time.h>
+#include "E:\Documents\lib\dart.toolkit.c.h"
 
 int problem_map_001[9][9] =
 {
@@ -69,14 +70,6 @@ bool all_value_equal_one(int* arr, int arr_size)
 	return true;
 }
 
-void initialize_array(int* arr, int arr_size, int Initial_value)
-{
-	for (int i = 0; i < arr_size; i++)
-	{
-		arr[i] = Initial_value;
-	}
-}
-
 bool check_maps(int maps[9][9], int maps_size)
 {
 	int counter[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -117,18 +110,6 @@ bool check_maps(int maps[9][9], int maps_size)
 		}
 	}
 	return true;
-}
-
-bool contain(int* arr, int arrSize, int value)
-{
-	for (int i = 0; i < arrSize; i++)
-	{
-		if(arr[i] == value)
-		{
-			return true;
-		}
-	}
-	return false;
 }
 
 void print_map(int map[9][9], int map_size)
@@ -222,17 +203,16 @@ void fill_user_map(int map[9][9])
 
 int main()
 {
-	time_t start_time = time(NULL);
 	int length = 9;
-	/*printf("Please input the problem map:");
+	printf("Please input the problem map:\nNote: 9 lines, numbers in each line should be separated by one space\n");
 	for (int i = 0; i < length; i++)
 	{
 		for (int j = 0; j < length; j++)
 		{
-			scanf("%d", problem_user_map[i][j]);
+			scanf("%d[^\n]", &problem_user_map[i][j]);
 		}
-	}*/
-	fill_user_map(problem_map_002);
+	}
+	//fill_user_map(problem_user_map);
 	int counts = 0;
 	for (int i = 0; i < length; i++)
 	{
@@ -260,10 +240,8 @@ int main()
 			}
 		}
 	}
-	int c = 0;
 	for (int i = 0; i < counts; i++)
 	{
-		c++;
 		if(map[i].selectable_nums == NULL)
 		{
 			Struct1 str = get_selectable_nums_and_size(problem_user_map, map[i].row_index, map[i].column_index);
@@ -295,8 +273,7 @@ int main()
 			problem_user_map[map[i].row_index][map[i].column_index] = map[i].selectable_nums[map[i].selectable_nums_index];
 		}
 	}
-	time_t end_time = time(NULL);
-	printf("循环次数：%d\n", c);
-	printf("总运行时间：%lld\n", end_time - start_time);
+	printf("-----------------\nSolution:\n");
 	print_map(problem_user_map, length);
+	system("pause");
 }
