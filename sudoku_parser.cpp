@@ -1,7 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
 #include <math.h>
-#include <stdbool.h>
+#include <vector>
+
+using namespace std;
 
 int problem_user_map[9][9] =
 {
@@ -29,15 +30,8 @@ typedef struct Map
 	int row_index;
 	int column_index;
 	int selectable_nums_index;
-	int* selectable_nums;
-	int selectable_nums_size;
+	vector<int> selectable_nums;
 } Map;
-
-typedef struct Struct1
-{
-	int size;
-	int* nums;
-} Struct1;
 
 void print_map(int map[9][9], int map_size)
 {
@@ -45,33 +39,22 @@ void print_map(int map[9][9], int map_size)
 	{
 		for (int j = 0; j < map_size; j++)
 		{
-			printf("%d ", map[i][j]);
+			cout << map[i][j] << " ";
 		}
-		printf("\n");
+		cout << "\n";
 	}
 }
 
-Struct1 get_selectable_nums_and_size(int map[9][9], int row_index, int column_index)
+vector<int> get_selectable_nums(int map[9][9], int row_index, int column_index)
 {
 	int seletable_nums[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 	for (int i = 0; i < 9; i++)
 	{
-		if(i == column_index)
-		{
-			continue;
-		}
-		if(map[row_index][i] != 0)
+		if(map[row_index][i] != 0 && i != column_index)
 		{
 			seletable_nums[map[row_index][i] - 1]++;
 		}
-	}
-	for (int i = 0; i < 9; i++)
-	{
-		if(i == row_index)
-		{
-			continue;
-		}
-		if(map[i][column_index] != 0)
+		if(map[i][column_index] != 0 && i != row_index)
 		{
 			seletable_nums[map[i][column_index] - 1]++;
 		}
@@ -81,81 +64,54 @@ Struct1 get_selectable_nums_and_size(int map[9][9], int row_index, int column_in
 		for (int j = 0; j < 3; j++)
 		{
 			int value = map[row_index / 3 * 3 + i][column_index / 3 * 3 + j];
-			if(row_index / 3 * 3 + i == row_index && column_index / 3 * 3 + j == column_index)
-			{
-				continue;
-			}
-			if(value != 0)
+			if(row_index / 3 * 3 + i != row_index && column_index / 3 * 3 + j != column_index && value != 0)
 			{
 				seletable_nums[value - 1]++;
 			}
 		}
 	}
-	int return_size = 0;
-	for (int i = 0; i < 9; i++)
-	{
-		if(seletable_nums[i] == 0)
-		{
-			return_size++;
-		}
-	}
-	int* return_nums = (int*)malloc(sizeof(int) * return_size);
+	vector<int> return_nums;
 	int index = 0;
 	for (int i = 0; i < 9; i++)
 	{
 		if(seletable_nums[i] == 0)
 		{
-			return_nums[index] = i + 1;
-			index++;
+			return_nums.push_back(i + 1);
 		}
 	}
-	Struct1 str = 
-	{
-		index,
-		return_nums
-	};
-	return str;
+	return return_nums;
 }
 
 int main()
 {
 	int length = 9;
-	int counts = 0;
-	printf("Please input the problem map:\nNote: 9 lines, numbers in each line should be separated by one space\n");
+	cout << "Please input the problem map:\nNote: 9 lines, numbers in each line should be separated by one space";
 	for (int i = 0; i < length; i++)
 	{
 		for (int j = 0; j < length; j++)
 		{
 			scanf("%d[^\n]", &problem_user_map[i][j]);
-			if(problem_user_map[i][j] != 0)
-			{
-				counts++;
-			}
 		}
 	}
-	int index = 0;
-	Map* map = (Map*)malloc(sizeof(Map) * counts);
+	vector<Map> map;
 	for (int i = 0; i < length; i++)
 	{
 		for (int j = 0; j < length; j++)
 		{
 			if(problem_user_map[i][j] == 0)
 			{
-				map[index].row_index = i;
-				map[index].column_index = j;
-				map[index].selectable_nums_index = -1;
-				map[index].selectable_nums = NULL;
-				index++;
+				Map element = {i, j, -1, vector<int>{}};
+				map.push_back(element);
 			}
 		}
 	}
-	for (int i = 0; i < counts; i++)
+	for (int i = 0; i < map.size(); i++)
 	{
-		if(map[i].selectable_nums == NULL)
+		if(map[i].selectable_nums.size() == 0)
 		{
-			Struct1 str = get_selectable_nums_and_size(problem_user_map, map[i].row_index, map[i].column_index);
+			auto nums = get_selectable_nums(problem_user_map, map[i].row_index, map[i].column_index);
 			map[i].selectable_nums_index = -1;
-			if(str.size == 0)
+			if(nums.size() == 0)
 			{
 				problem_user_map[map[i].row_index][map[i].column_index] = 0;
 				i -= 2;
@@ -163,16 +119,15 @@ int main()
 			}
 			else
 			{
-				map[i].selectable_nums = str.nums;
-				map[i].selectable_nums_size = str.size;
+				map[i].selectable_nums = nums;
 				problem_user_map[map[i].row_index][map[i].column_index] = map[i].selectable_nums[0];
 			}
 		}
 		//达到备选数字的最后索引
-		if(map[i].selectable_nums_index == map[i].selectable_nums_size - 1)
+		if(map[i].selectable_nums_index == map[i].selectable_nums.size() - 1)
 		{
 			map[i].selectable_nums_index = -1;
-			map[i].selectable_nums = NULL;
+			map[i].selectable_nums = vector<int>{};
 			problem_user_map[map[i].row_index][map[i].column_index] = 0;
 			i -= 2;
 		}
@@ -182,7 +137,7 @@ int main()
 			problem_user_map[map[i].row_index][map[i].column_index] = map[i].selectable_nums[map[i].selectable_nums_index];
 		}
 	}
-	printf("-----------------\nSolution:\n");
+	cout << "-----------------\nSolution:\n";
 	print_map(problem_user_map, length);
 	system("pause");
 }
